@@ -1,0 +1,20 @@
+name: Examples Nightly Run
+
+on:
+  workflow_call:
+    inputs:
+      example_name:
+        required: true
+        type: string
+
+env:
+  SGE_ROOT: /cm/shared/apps/sge/current
+  SGE_BIN: /cm/shared/apps/sge/current/bin/linux-x64
+
+jobs:
+  build_example:
+    runs-on: [ nightly ]
+    steps:
+      - name: build ${{ inputs.example_name }}
+        run: |
+          echo ${{ inputs.example_name }}
