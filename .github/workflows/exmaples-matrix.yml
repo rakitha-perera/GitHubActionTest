@@ -36,9 +36,9 @@ jobs:
         id: check_commits
         run: |
           if [ "${{ steps.get_previous_commit.outputs.previous_commit }}" = "${{ steps.get_current_commit.outputs.current_commit }}" ]; then
-            echo "echo "new_commits=0" >> $GITHUB_OUTPUT"
+            echo "new_commits=0" >> $GITHUB_OUTPUT
           else
-            echo "echo "new_commits=1" >> $GITHUB_OUTPUT"
+            echo "new_commits=1" >> $GITHUB_OUTPUT
           fi
 
       - name: Send notification if no new commits
