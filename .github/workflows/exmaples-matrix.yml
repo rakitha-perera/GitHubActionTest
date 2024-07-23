@@ -11,42 +11,65 @@ on:
 
 jobs:
   check-commits:
-    runs-on: ubuntu-latest
+    runs-on: rakitha_test
+    outputs:
+      new_commits: ${{ steps.check_commits.outputs.new_commits }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check for new commits
+      - name: Get current commit hash
+        id: get_current_commit
+        run: echo "current_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Get previous commit hash
+        id: get_previous_commit
+        run: |
+          if [ -f git_hash.txt ]; then
+            previous_commit=$(cat git_hash.txt)
+          else
+            previous_commit=""
+          fi
+          echo "previous_commit=$previous_commit" >> $GITHUB_OUTPUT
+
+      - name: Compare commit hashes
         id: check_commits
         run: |
-          git fetch origin
-          COMMITS=$(git rev-list HEAD...origin/main --count)
-          echo "new_commits=$COMMITS" >> $GITHUB_OUTPUT
+          if [ "${{ steps.get_previous_commit.outputs.previous_commit }}" = "${{ steps.get_current_commit.outputs.current_commit }}" ]; then
+            echo "echo "new_commits=0" >> $GITHUB_OUTPUT"
+          else
+            echo "cho "new_commits=1" >> $GITHUB_OUTPUT"
+          fi
 
       - name: Send notification if no new commits
         if: steps.check_commits.outputs.new_commits == '0'
         run: |
           echo "No new commits found. Sending notification to Teams."
 
+      - name: Save current commit hash
+        if: steps.check_commits.outputs.new_commits == '1'
+        run: echo "${{ steps.check_commits.outputs.current_commit }}" > git_hash.txt
+        continue-on-error: true
+
   process-folders:
-    runs-on: ubuntu-latest
+    runs-on: rakitha_test
     needs: check-commits
-    if: needs.check_commits.outputs.new_commits != '0'
+    if: needs.check-commits.outputs.new_commits == '1'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set default directory
-        run: echo "DEFAULT_DIR=test_folder" >> $GITHUB_OUTPUT
+        run: echo "DEFAULT_DIR=test_folders" >>  $GITHUB_OUTPUT
 
       - name: Determine folders to process
         id: determine_folders
         run: |
           if [ "${{ github.event.inputs.folders }}" ]; then
-            echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_ENV
+            echo "folders=${{ github.event.inputs.folders }}" >>  $GITHUB_OUTPUT
           else
             folders=$(ls -d $DEFAULT_DIR/*/)
-            echo "folders=${folders//$'\n'/,}" >> $GITHUB_ENV
+            echo "folders=${folders//$'\n'/,}" >>  $GITHUB_OUTPUT
 
       - name: Iterate over folders and run action
         run: |
