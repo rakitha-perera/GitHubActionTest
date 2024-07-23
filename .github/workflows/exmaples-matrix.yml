@@ -21,23 +21,23 @@ jobs:
         run: |
           git fetch origin
           COMMITS=$(git rev-list HEAD...origin/main --count)
-          echo "new_commits=$COMMITS" >> $GITHUB_ENV
+          echo "new_commits=$COMMITS" >> $GITHUB_OUTPUT
 
       - name: Send notification if no new commits
-        if: env.new_commits == '0'
+        if: steps.check_commits.outputs.new_commits == '0'
         run: |
           echo "No new commits found. Sending notification to Teams."
 
   process-folders:
     runs-on: ubuntu-latest
     needs: check-commits
-    if: env.new_commits != '0'
+    if: needs.check_commits.outputs.new_commits != '0'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set default directory
-        run: echo "DEFAULT_DIR=/illumina-sdcolo-02/scratch/Descartes/testing/mapflow/repo" >> $GITHUB_ENV
+        run: echo "DEFAULT_DIR=test_folder" >> $GITHUB_OUTPUT
 
       - name: Determine folders to process
         id: determine_folders
