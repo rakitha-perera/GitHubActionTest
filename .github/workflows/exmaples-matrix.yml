@@ -11,7 +11,7 @@ on:
 
 jobs:
   check-commits:
-    runs-on: rakitha_test
+    runs-on: rakitha
     outputs:
       new_commits: ${{ steps.check_commits.outputs.new_commits }}
     steps:
@@ -25,8 +25,8 @@ jobs:
       - name: Get previous commit hash
         id: get_previous_commit
         run: |
-          if [ -f git_hash.txt ]; then
-            previous_commit=$(cat git_hash.txt)
+          if [ -f /Users/rperera/repo/GitHubActionTest/git_hash/git_hash.txt ]; then
+            previous_commit=$(cat /Users/rperera/repo/GitHubActionTest/git_hash/git_hash.txt)
           else
             previous_commit=""
           fi
@@ -52,7 +52,7 @@ jobs:
         continue-on-error: true
 
   process-folders:
-    runs-on: rakitha_test
+    runs-on: rakitha
     needs: check-commits
     if: needs.check-commits.outputs.new_commits == '1'
     steps:
@@ -73,7 +73,7 @@ jobs:
 
       - name: Iterate over folders and run action
         run: |
-          IFS=',' read -r -a folder_array <<< "${{ env.folders }}"
+          IFS=',' read -r -a folder_array <<< "${{ steps.determine_folders.outputs.folders }}"
           for folder in "${folder_array[@]}"; do
             if [ -f "$folder/run_test.sh" ]; then
               echo "Running action for folder: $folder"
