@@ -25,11 +25,10 @@ jobs:
           COMMITS=$(git rev-list HEAD...origin/main --count)
           echo "::set-output name=new_commits::$COMMITS"
 
-    #  - name: Send notification if no new commits
-    #    if: steps.check_commits.outputs.new_commits == '0'
-    #    run: |
-    #      echo "No new commits found. Sending notification to Teams."
-    #      curl -H 'Content-Type: application/json' -d '{"text": "No new commits found in the repository."}' ${{ secrets.TEAMS_WEBHOOK_URL }}
+      - name: Send notification if no new commits
+        if: steps.check_commits.outputs.new_commits == '0'
+        run: |
+          echo "No new commits found. Sending notification to Teams."
 
   process-folders:
     runs-on: ubuntu-latest
@@ -40,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set default directory
-        run: echo "DEFAULT_DIR=/illumina-sdcolo-02/scratch/Descartes/testing/mapflow/repo" >> $GITHUB_ENV
+        run: echo "DEFAULT_DIR=test_folders" >> $GITHUB_ENV
 
       - name: Determine folders to process
         id: determine_folders
