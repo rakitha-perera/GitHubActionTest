@@ -1,4 +1,4 @@
-name: Multi-Folder Workflow
+name: Examples Nightly Run Matrix
 
 on:
   workflow_dispatch:
@@ -65,11 +65,11 @@ jobs:
       - name: Determine folders to process
         id: determine_folders
         run: |
-          if [ "${{ github.event.inputs.folders }}" ]; then
-            echo "folders=${{ github.event.inputs.folders }}" >>  $GITHUB_OUTPUT
-          else
-            folders=$(ls -d $DEFAULT_DIR/*/)
-            echo "folders=${folders//$'\n'/,}" >>  $GITHUB_OUTPUT
+            if [ -n "${{ github.event.inputs.folders }}" ]; then
+                echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
+            else
+                folders=$(ls -d $DEFAULT_DIR/*/)
+                echo "folders=${folders//$'\n'/,}" >> $GITHUB_OUTPUT
 
       - name: Iterate over folders and run action
         run: |
