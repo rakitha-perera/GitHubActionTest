@@ -91,7 +91,7 @@ jobs:
             
                   - name: Echo
                     run: | 
-                        echo needs "${{ needs.process-folders.outputs.folders }}""
+                        echo -e "${{ needs.process-folders.outputs.folders }}""
 
   examples-matrix:
       runs-on: rakitha
