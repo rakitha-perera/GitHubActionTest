@@ -100,10 +100,7 @@ jobs:
         max-parallel: 2
         fail-fast: false
         matrix:
-          example_name: [
-            "/Users/rperera/repo/test_folders/Example_A/",
-            "/Users/rperera/repo/test_folders/Example_B/"
-          ]
+          example_name: ${{ fromJSON(needs.process-folders.outputs.folders) }}
       steps:
           - name: Run nightly-run workflow
             uses: ./.github/workflows/nightly-run.yml
