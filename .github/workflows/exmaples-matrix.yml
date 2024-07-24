@@ -94,17 +94,13 @@ jobs:
                         echo -e "${{ needs.process-folders.outputs.folders }}""
 
   examples-matrix:
-      runs-on: rakitha
       needs: process-folders    
       strategy:
         max-parallel: 2
         fail-fast: false
         matrix:
           example_name: ${{ fromJSON(needs.process-folders.outputs.folders) }}
-      steps:
-          - name: Checkout repository
-            uses: actions/checkout@v3
-          - name: Run nightly-run workflow
-            uses: ./.github/workflows/nightly-run.yml
-            with:
-              example_name: ${{ matrix.example_name }}
+      uses: ./.github/workflows/nightly-run.yml
+      with:
+        example_name: ${{ matrix.example_name }}
+            
