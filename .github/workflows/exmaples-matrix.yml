@@ -1,6 +1,7 @@
 name: Examples Nightly Run Matrix
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       folders:
@@ -8,6 +9,9 @@ on:
         required: false
   schedule:
     - cron: '0 0 * * *' # Runs every day at midnight
+
+env:
+    GIT_HASH_FILE: /Users/rperera/repo/git_hash/git_hash.txt
 
 jobs:
   check-commits:
@@ -25,8 +29,8 @@ jobs:
       - name: Get previous commit hash
         id: get_previous_commit
         run: |
-          if [ -f /Users/rperera/repo/git_hash/git_hash.txt ]; then
-            previous_commit=$(cat /Users/rperera/repo/git_hash/git_hash.txt)
+          if [ -f $GIT_HASH_FILE ]; then
+            previous_commit=$(cat $GIT_HASH_FILE)
           else
             previous_commit=""
           fi
@@ -48,7 +52,7 @@ jobs:
 
       - name: Save current commit hash
         if: steps.check_commits.outputs.new_commits == '1'
-        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > /Users/rperera/repo/GitHubActionTest/git_hash//git_hash.txt
+        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > $GIT_HASH_FILE
         continue-on-error: true
 
   process-folders:
