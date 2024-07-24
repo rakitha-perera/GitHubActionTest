@@ -92,8 +92,6 @@ jobs:
                   - name: Echo
                     run: | 
                         echo needs ${{ needs.process-folders.outputs.folders }}
-                        echo output ${{ steps.determine_folders.outputs.folders }}
-
 
   examples-matrix:
       runs-on: rakitha
@@ -102,7 +100,10 @@ jobs:
         max-parallel: 2
         fail-fast: false
         matrix:
-          example_name: ${{ needs['process-folders'].outputs.folders }}
+          example_name: [
+            "/Users/rperera/repo/test_folders/Example_A/",
+            "/Users/rperera/repo/test_folders/Example_B/"
+          ]
       steps:
           - name: Run nightly-run workflow
             uses: ./.github/workflows/nightly-run.yml
