@@ -91,7 +91,7 @@ jobs:
             
                   - name: Echo
                     run: | 
-                        echo needs ${{ needs.process-folders.outputs.folders }}
+                        echo needs "${{ needs.process-folders.outputs.folders }}""
 
   examples-matrix:
       runs-on: rakitha
@@ -102,6 +102,8 @@ jobs:
         matrix:
           example_name: ${{ fromJSON(needs.process-folders.outputs.folders) }}
       steps:
+          - name: Checkout repository
+            uses: actions/checkout@v3
           - name: Run nightly-run workflow
             uses: ./.github/workflows/nightly-run.yml
             with:
