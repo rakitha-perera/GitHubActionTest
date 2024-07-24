@@ -77,7 +77,7 @@ jobs:
                 folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
                 echo "folders=$folders_json" >> $GITHUB_OUTPUT
             fi
-            echo "folder output ${{ steps.determine_folders.outputs.folders }}"
+            echo folder after jq ${{ steps.determine_folders.outputs.folders }}
 
   examples-matrix:
       runs-on: rakitha
