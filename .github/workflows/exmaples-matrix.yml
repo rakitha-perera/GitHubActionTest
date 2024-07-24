@@ -72,10 +72,11 @@ jobs:
             if [ "${{ github.event.inputs.folders }}" ]; then
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
+                DEFAULT_DIR="/Users/rperera/repo/test_folders"
                 folders=$(ls -d $DEFAULT_DIR/*/)
-                echo $folders
-                echo "folders=$(echo $folders | tr ' ' ',')" >> $GITHUB_OUTPUT
-                echo $folders
+                folders_comma_separated=${folders//$'\n'/,}
+                echo $folders_comma_separated
+                echo "folders=$folders_comma_separated" >> $GITHUB_OUTPUT
             fi
             echo $folders
 
