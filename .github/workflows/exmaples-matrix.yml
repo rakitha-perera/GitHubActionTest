@@ -80,6 +80,7 @@ jobs:
                 echo "folders=$folders_json" >> $GITHUB_OUTPUT
                 echo 'EOF' >> $GITHUB_OUTPUT
             fi
+            echo $folders
 
   examples-matrix:
       runs-on: rakitha
