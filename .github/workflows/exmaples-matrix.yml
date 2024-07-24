@@ -58,6 +58,8 @@ jobs:
   process-folders:
     runs-on: rakitha
     needs: check-commits
+    outputs:
+        folders: ${{ steps.determine_folders.outputs.folders }}
     if: needs.check-commits.outputs.new_commits == '1'
     steps:
       - name: Checkout repository
@@ -77,7 +79,7 @@ jobs:
 
   examples-matrix:
     runs-on: rakitha
-    needs: process-folders
+    needs: process-folders    
     strategy:
       max-parallel: 2
       fail-fast: false
