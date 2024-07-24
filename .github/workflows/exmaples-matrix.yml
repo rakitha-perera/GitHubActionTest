@@ -73,6 +73,7 @@ jobs:
                 folders=$(ls -d $DEFAULT_DIR/*/)
                 echo "folders=${folders//$'\n'/,}" >> $GITHUB_OUTPUT
             fi
+            echo $folders
 
   examples-matrix:
     runs-on: rakitha
