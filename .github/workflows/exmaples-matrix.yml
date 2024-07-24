@@ -76,7 +76,9 @@ jobs:
                 folders_comma_separated=${folders//$'\n'/,}
                 echo $folders_comma_separated
                 folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
+                echo 'var<<EOF' >> $GITHUB_OUTPUT
                 echo "folders=$folders_json" >> $GITHUB_OUTPUT
+                echo 'EOF' >> $GITHUB_OUTPUT
             fi
 
   examples-matrix:
