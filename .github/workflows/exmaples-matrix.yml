@@ -26,7 +26,7 @@ jobs:
         id: get_previous_commit
         run: |
           if [ -f /Users/rperera/repo/GitHubActionTest/git_hash/git_hash.txt ]; then
-            previous_commit=$(cat /Users/rperera/repo/GitHubActionTest/git_hash/git_hash.txt)
+            previous_commit=$(cat /Users/rperera/repo/git_hash/git_hash.txt)
           else
             previous_commit=""
           fi
@@ -59,12 +59,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set default directory
-        run: echo "DEFAULT_DIR=/Users/rperera/repo/GitHubActionTest/test_folders" >>  $GITHUB_OUTPUT
-
       - name: Determine folders to process
         id: determine_folders
         run: |
+            $DEFAULT_DIR=/Users/rperera/repo/GitHubActionTest/test_folders
             if [ "${{ github.event.inputs.folders }}" ]; then
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
