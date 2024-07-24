@@ -47,8 +47,8 @@ jobs:
           echo "No new commits found. Sending notification to Teams."
 
       - name: Save current commit hash
-        if: steps.check_commits.outputs.new_commits == '1'
-        run: echo "${{ steps.check_commits.outputs.current_commit }}" > /Users/rperera/repo/GitHubActionTest/git_hash//git_hash.txt
+        if: steps.get_current_commit.outputs.new_commits == '1'
+        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > /Users/rperera/repo/GitHubActionTest/git_hash//git_hash.txt
         continue-on-error: true
 
   process-folders:
