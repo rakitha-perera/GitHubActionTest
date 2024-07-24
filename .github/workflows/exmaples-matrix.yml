@@ -78,7 +78,7 @@ jobs:
                 echo $folders_comma_separated
                 echo "folders=$folders_comma_separated" >> $GITHUB_OUTPUT
             fi
-            echo $folders
+            echo "folder output ${{ steps.determine_folders.outputs.folders }}"
 
   examples-matrix:
       runs-on: rakitha
