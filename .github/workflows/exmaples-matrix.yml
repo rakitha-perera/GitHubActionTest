@@ -84,7 +84,7 @@ jobs:
       max-parallel: 2
       fail-fast: false
       matrix:
-        example_name: ${{ needs.process-folders.outputs.folders }}
+        example_name: ${{ fromJson(needs.process-folders.outputs.folders) }}
     steps:
       - name: Run nightly-run workflow
         uses: ./.github/workflows/nightly-run.yml
