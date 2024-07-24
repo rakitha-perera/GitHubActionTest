@@ -72,14 +72,15 @@ jobs:
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
                 DEFAULT_DIR="/Users/rperera/repo/test_folders"
+                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
                 folders=$(ls -d $DEFAULT_DIR/*/)
                 folders_comma_separated=${folders//$'\n'/,}
                 echo $folders_comma_separated
                 folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
                 echo $folders_json
-                echo 'var<<EOF' >> $GITHUB_OUTPUT
-                echo "folders=blah" >> $GITHUB_OUTPUT
-                echo 'EOF' >> $GITHUB_OUTPUT
+                echo "folders<<$EOF" >> $GITHUB_OUTPUT
+                echo "$folders_json" >> $GITHUB_OUTPUT
+                echo "$EOF" >> $GITHUB_OUTPUT
             fi
             echo $folders
 
