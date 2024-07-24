@@ -73,20 +73,22 @@ jobs:
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
                 folders=$(ls -d $DEFAULT_DIR/*/)
+                echo $folders
                 echo "folders=${folders//$'\n'/,}" >> $GITHUB_OUTPUT
+                echo $folders
             fi
             echo $folders
 
   examples-matrix:
-    runs-on: rakitha
-    needs: process-folders    
-    strategy:
-      max-parallel: 2
-      fail-fast: false
-      matrix:
-        example_name: ${{ fromJson(needs.process-folders.outputs.folders) }}
-    steps:
-      - name: Run nightly-run workflow
-        uses: ./.github/workflows/nightly-run.yml
-        with:
-          example_name: ${{ matrix.example_name }}
+      runs-on: rakitha
+      needs: process-folders    
+      strategy:
+        max-parallel: 2
+        fail-fast: false
+        matrix:
+          example_name: ${{ fromJson(needs.process-folders.outputs.folders) }}
+      steps:
+          - name: Run nightly-run workflow
+            uses: ./.github/workflows/nightly-run.yml
+            with:
+              example_name: ${{ matrix.example_name }}
