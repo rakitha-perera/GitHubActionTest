@@ -84,15 +84,6 @@ jobs:
             fi
             echo $folders
 
-  echo_value:
-    runs-on: rakitha
-    needs: process-folders
-    steps:
-            
-                  - name: Echo
-                    run: | 
-                        echo -e "${{ needs.process-folders.outputs.folders }}""
-
   examples-matrix:
       needs: process-folders    
       strategy:
@@ -102,5 +93,4 @@ jobs:
           example_name: ${{ fromJSON(needs.process-folders.outputs.folders) }}
       uses: ./.github/workflows/nightly-run.yml
       with:
-        example_name: ${{ matrix.example_name }}
-            
+        example_name: basename ${{ matrix.example_name }}
