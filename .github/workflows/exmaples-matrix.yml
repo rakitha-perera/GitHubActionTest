@@ -74,7 +74,7 @@ jobs:
             else
                 folders=$(ls -d $DEFAULT_DIR/*/)
                 echo $folders
-                echo "folders=${folders//$' '/,}" >> $GITHUB_OUTPUT
+                echo "folders=$(echo $folders | tr ' ' ',')" >> $GITHUB_OUTPUT
                 echo $folders
             fi
             echo $folders
