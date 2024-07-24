@@ -25,7 +25,7 @@ jobs:
       - name: Get previous commit hash
         id: get_previous_commit
         run: |
-          if [ -f /Users/rperera/repo/GitHubActionTest/git_hash/git_hash.txt ]; then
+          if [ -f /Users/rperera/repo/git_hash/git_hash.txt ]; then
             previous_commit=$(cat /Users/rperera/repo/git_hash/git_hash.txt)
           else
             previous_commit=""
@@ -62,7 +62,7 @@ jobs:
       - name: Determine folders to process
         id: determine_folders
         run: |
-            $DEFAULT_DIR=/Users/rperera/repo/GitHubActionTest/test_folders
+            DEFAULT_DIR= /Users/rperera/repo/test_folders
             if [ "${{ github.event.inputs.folders }}" ]; then
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
