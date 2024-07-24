@@ -68,15 +68,14 @@ jobs:
       - name: Determine folders to process
         id: determine_folders
         run: |
-            DEFAULT_DIR="/Users/rperera/repo/test_folders"
             if [ "${{ github.event.inputs.folders }}" ]; then
                 echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
                 DEFAULT_DIR="/Users/rperera/repo/test_folders"
                 folders=$(ls -d $DEFAULT_DIR/*/)
                 folders_comma_separated=${folders//$'\n'/,}
-                echo $folders_comma_separated
-                echo "folders=$folders_comma_separated" >> $GITHUB_OUTPUT
+                folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
+                echo "folders=$folders_json" >> $GITHUB_OUTPUT
             fi
             echo "folder output ${{ steps.determine_folders.outputs.folders }}"
 
@@ -87,7 +86,7 @@ jobs:
         max-parallel: 2
         fail-fast: false
         matrix:
-          example_name: ${{ fromJson(needs.process-folders.outputs.folders) }}
+          example_name: ${{ fromJson(needs['process-folders'].outputs.folders) }}
       steps:
           - name: Run nightly-run workflow
             uses: ./.github/workflows/nightly-run.yml
