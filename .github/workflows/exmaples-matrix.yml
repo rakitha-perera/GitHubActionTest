@@ -71,8 +71,7 @@ jobs:
             if [ "${{ github.event.inputs.folders }}" ]; then
                 folders_comma_separated="${{ github.event.inputs.folders }}"
             else
-                DEFAULT_DIR="/Users/rperera/repo/test_folders"
-                folders=$(ls -d $DEFAULT_DIR/*/)
+                folders=$(ls -d ./test_folders/*/)
                 valid_folders=()
                 for folder in $folders; do
                 if [ -f "$folder/run_this_to_test.sh" ]; then
