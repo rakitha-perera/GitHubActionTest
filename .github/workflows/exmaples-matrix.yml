@@ -69,11 +69,9 @@ jobs:
         id: determine_folders
         run: |
             if [ "${{ github.event.inputs.folders }}" ]; then
-            folders_comma_separated=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
+                folders_comma_separated=${{ github.event.inputs.folders }}
             else
                 DEFAULT_DIR="/Users/rperera/repo/test_folders"
-                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-
                 folders=$(ls -d $DEFAULT_DIR/*/)
                 valid_folders=()
                 for folder in $folders; do
@@ -87,7 +85,8 @@ jobs:
 
             echo folder name comma separated: $folders_comma_separated 
             folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
-
+            
+            EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
             echo "folders<<$EOF" >> $GITHUB_OUTPUT
             echo "$folders_json" >> $GITHUB_OUTPUT
             echo "$EOF" >> $GITHUB_OUTPUT            
