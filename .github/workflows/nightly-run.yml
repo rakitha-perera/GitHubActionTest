@@ -20,4 +20,4 @@ jobs:
       - name: build ${{ inputs.example_name }}
         run: |
           echo ${{ inputs.example_name }}
-          grep ${{ inputs.example_name }} /Users/rperera/repo/test_folders/test.txt
+          grep ${{ inputs.example_name }} ./test_folders/test.txt
