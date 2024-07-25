@@ -73,15 +73,24 @@ jobs:
             else
                 DEFAULT_DIR="/Users/rperera/repo/test_folders"
                 EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+
                 folders=$(ls -d $DEFAULT_DIR/*/)
-                folder_names=$(basename -a $folders)
-                folder_names_comma_separated=$(echo $folder_names | tr ' ' ',')
-                echo folder name comma separated $folder_names_comma_separated
-                folders_json=$(echo $folder_names_comma_separated | jq -R 'split(",")')
+                valid_folders=()
+                for folder in $folders; do
+                if [ -f "$folder/run_this_to_test.sh" ]; then
+                    valid_folders+=($(basename "$folder"))
+                fi
+                done
+                valid_folders_comma_separated=$(IFS=,; echo "${valid_folders[*]}")
+                echo folder name comma separated $valid_folders_comma_separated
+                folders_json=$(echo $valid_folders_comma_separated | jq -R 'split(",")')
+                
                 echo "folders<<$EOF" >> $GITHUB_OUTPUT
                 echo "$folders_json" >> $GITHUB_OUTPUT
                 echo "$EOF" >> $GITHUB_OUTPUT
             fi
+
+            
 
   examples-matrix:
       needs: process-folders    
