@@ -82,9 +82,9 @@ jobs:
                 fi
                 done
                 valid_folders_comma_separated=$(IFS=,; echo "${valid_folders[*]}")
-                echo folder name comma separated $valid_folders_comma_separated
+                echo folder name comma separated: $valid_folders_comma_separated
                 folders_json=$(echo $valid_folders_comma_separated | jq -R 'split(",")')
-                
+
                 echo "folders<<$EOF" >> $GITHUB_OUTPUT
                 echo "$folders_json" >> $GITHUB_OUTPUT
                 echo "$EOF" >> $GITHUB_OUTPUT
