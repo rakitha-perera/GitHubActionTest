@@ -52,7 +52,9 @@ jobs:
 
       - name: Save current commit hash
         if: steps.check_commits.outputs.new_commits == '1'
-        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > $LAST_COMMIT_HASH_FILE
+        run: |
+            mkdir -p $(dirname $LAST_COMMIT_HASH_FILE)
+            echo "${{ steps.get_current_commit.outputs.current_commit }}" > $LAST_COMMIT_HASH_FILE
         continue-on-error: true
 
   process-folders: # Determine folders to process and pass them to the matrix
