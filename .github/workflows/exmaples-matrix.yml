@@ -46,7 +46,7 @@ jobs:
           fi
 
       - name: Send notification if no new commits
-        if: steps.check_commits.outputs.new_commits == '0'
+        if: steps.check_commits.outputs.new_commits == '0' && github.event_name != 'workflow_dispatch'
         run: |
           echo "No new commits found. Sending notification to Teams."
 
@@ -60,7 +60,7 @@ jobs:
     needs: check-commits
     outputs:
         folders: ${{ steps.determine_folders.outputs.folders }}
-    if: needs.check-commits.outputs.new_commits == '1'
+    if: needs.check-commits.outputs.new_commits == '1' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
         id: determine_folders
         run: |
             if [ "${{ github.event.inputs.folders }}" ]; then
-                echo "folders=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
+            folders_comma_separated=${{ github.event.inputs.folders }}" >> $GITHUB_OUTPUT
             else
                 DEFAULT_DIR="/Users/rperera/repo/test_folders"
                 EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
@@ -81,16 +81,16 @@ jobs:
                     valid_folders+=($(basename "$folder"))
                 fi
                 done
-                valid_folders_comma_separated=$(IFS=,; echo "${valid_folders[*]}")
-                echo folder name comma separated: $valid_folders_comma_separated
-                folders_json=$(echo $valid_folders_comma_separated | jq -R 'split(",")')
-
-                echo "folders<<$EOF" >> $GITHUB_OUTPUT
-                echo "$folders_json" >> $GITHUB_OUTPUT
-                echo "$EOF" >> $GITHUB_OUTPUT
+                folders_comma_separated=$(IFS=,; echo "${valid_folders[*]}")
+                              
             fi
 
-            
+            echo folder name comma separated: $folders_comma_separated 
+            folders_json=$(echo $folders_comma_separated | jq -R 'split(",")')
+
+            echo "folders<<$EOF" >> $GITHUB_OUTPUT
+            echo "$folders_json" >> $GITHUB_OUTPUT
+            echo "$EOF" >> $GITHUB_OUTPUT            
 
   examples-matrix:
       needs: process-folders    
