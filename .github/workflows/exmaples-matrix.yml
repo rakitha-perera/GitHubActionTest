@@ -11,10 +11,10 @@ on:
     - cron: '0 0 * * *' # Runs every day at midnight
 
 env:
-    GIT_HASH_FILE: /Users/rperera/repo/git_hash/git_hash.txt
+    LAST_COMMIT_HASH_FILE: /Users/rperera/repo/git_hash/git_hash.txt
 
 jobs:
-  check-commits:
+  check-commits: # Check for new commits since the last run
     runs-on: rakitha
     outputs:
       new_commits: ${{ steps.check_commits.outputs.new_commits }}
@@ -29,8 +29,8 @@ jobs:
       - name: Get previous commit hash
         id: get_previous_commit
         run: |
-          if [ -f $GIT_HASH_FILE ]; then
-            previous_commit=$(cat $GIT_HASH_FILE)
+          if [ -f $LAST_COMMIT_HASH_FILE ]; then
+            previous_commit=$(cat $LAST_COMMIT_HASH_FILE)
           else
             previous_commit=""
           fi
@@ -52,23 +52,20 @@ jobs:
 
       - name: Save current commit hash
         if: steps.check_commits.outputs.new_commits == '1'
-        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > $GIT_HASH_FILE
+        run: echo "${{ steps.get_current_commit.outputs.current_commit }}" > $LAST_COMMIT_HASH_FILE
         continue-on-error: true
 
-  process-folders:
+  process-folders: # Determine folders to process and pass them to the matrix
     runs-on: rakitha
     needs: check-commits
     outputs:
         folders: ${{ steps.determine_folders.outputs.folders }}
     if: needs.check-commits.outputs.new_commits == '1' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Determine folders to process
         id: determine_folders
         run: |
-            if [ "${{ github.event.inputs.folders }}" ]; then
+            if [ -n "${{ github.event.inputs.folders }}" ]; then
                 folders_comma_separated="${{ github.event.inputs.folders }}"
             else
                 folders=$(ls -d ./test_folders/*/)
@@ -90,7 +87,7 @@ jobs:
             echo "$folders_json" >> $GITHUB_OUTPUT
             echo "$EOF" >> $GITHUB_OUTPUT            
 
-  examples-matrix:
+  examples-matrix: # Run the matrix job on the determined folders
       needs: process-folders    
       strategy:
         max-parallel: 2
