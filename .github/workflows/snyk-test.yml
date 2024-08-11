@@ -7,35 +7,34 @@ on:
 jobs:
   build_example:
     runs-on: rakitha
+    env:
+      SNYK_SEVERITY_THRESHOLD: high  # Define the severity threshold as an environment variable
+
     steps:
       - name: clone repo
         uses: actions/checkout@v3
+
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 20
-      - name: build
-        run: |
-          . "/Users/rperera/miniforge3/etc/profile.d/conda.sh"
-          cd /Users/rperera/repo/spatial-aligner
-          conda env create -y -f environment.yml
-          conda activate spal
       - name: snyk test - frontend
         run: | 
           cd /Users/rperera/repo/spatial-aligner/frontend 
-          snyk test --all-projects
-          snyk code test --severity-threshold=high
+          snyk test --all-projects --severity-threshold=$SNYK_SEVERITY_THRESHOLD
+          snyk code test --severity-threshold=$SNYK_SEVERITY_THRESHOLD
       - name: snyk test - backend 
         run: |
           cd /Users/rperera/repo/spatial-aligner/backend
           pip freeze > requirements.txt
-          snyk test --all-projects --command=python3
-          snyk code test --severity-threshold=high
-      - name: snyk test - backend 
+          snyk test --all-projects --command=python3 --severity-threshold=$SNYK_SEVERITY_THRESHOLD
+          snyk code test --severity-threshold=$SNYK_SEVERITY_THRESHOLD
+      - name: snyk test - C++ backend 
         run: |
           cd /Users/rperera/repo/spatial-aligner/cpp_backend
-          snyk test --unmanaged --print-deps
-          snyk code test --severity-threshold=high
+          snyk test --unmanaged --print-deps --severity-threshold=$SNYK_SEVERITY_THRESHOLD
+          snyk code test --severity-threshold=$SNYK_SEVERITY_THRESHOLD
+
 
 
           
