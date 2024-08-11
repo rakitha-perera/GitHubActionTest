@@ -2,6 +2,7 @@ name: Snyk Test
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   build_example:
@@ -27,7 +28,6 @@ jobs:
         run: |
           cd /Users/rperera/repo/spatial-aligner/backend
           pip freeze > requirements.txt
-          pip install -r requirements.txt
           snyk test --all-projects --command=python3
 
 
