@@ -17,7 +17,7 @@ jobs:
         run: |
           cd /Users/rperera/repo/spatial-aligner
           conda env create -y -f environment.yml
-          conda activate spal && cd scripts && ./pack_all.sh
+          conda activate spal
       - name: snyk test
         run: | 
           cd /Users/rperera/repo/spatial-aligner/frontend 
