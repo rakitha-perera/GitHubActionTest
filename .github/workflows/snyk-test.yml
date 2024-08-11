@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+
+jobs:
+  build_example:
+    runs-on: rakitha
+    steps:
+      - name: clone repo
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: build
+        run: |
+          cd /Users/rperera/repo/spatial-aligner
+          conda env create -y -f environment.yml
+          conda activate spal && cd scripts && ./pack_all.sh
+      - name: snyk test
+        run: | 
+          cd /Users/rperera/repo/spatial-aligner/frontend 
+          snyk test --all-projects
+          
