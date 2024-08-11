@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - name: build
         run: |
-          cd /Users/rperera/repo/spatial-aligner
+          . "/Users/rperera/miniforge3/etc/profile.d/conda.sh"
           conda env create -y -f environment.yml
           conda activate spal
       - name: snyk test
