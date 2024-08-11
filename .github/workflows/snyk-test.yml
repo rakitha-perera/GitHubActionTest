@@ -19,8 +19,16 @@ jobs:
           cd /Users/rperera/repo/spatial-aligner
           conda env create -y -f environment.yml
           conda activate spal
-      - name: snyk test
+      - name: snyk test - frontend
         run: | 
           cd /Users/rperera/repo/spatial-aligner/frontend 
           snyk test --all-projects
+      - name: snyk test - backend 
+        run: |
+          cd /Users/rperera/repo/spatial-aligner/backend
+          pip freeze > requirements.txt
+          pip install -r requirements.txt
+          snyk test --all-projects --command=python3
+
+
           
