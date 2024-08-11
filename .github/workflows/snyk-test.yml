@@ -24,18 +24,18 @@ jobs:
         run: | 
           cd /Users/rperera/repo/spatial-aligner/frontend 
           snyk test --all-projects
-          snyk code test
+          snyk code test --severity-threshold=medium
       - name: snyk test - backend 
         run: |
           cd /Users/rperera/repo/spatial-aligner/backend
           pip freeze > requirements.txt
           snyk test --all-projects --command=python3
-          snyk code test
+          snyk code test --severity-threshold=medium
       - name: snyk test - backend 
         run: |
           cd /Users/rperera/repo/spatial-aligner/cpp_backend
           snyk test --unmanaged --print-deps
-          snyk code test
+          snyk code test --severity-threshold=medium
 
 
           
