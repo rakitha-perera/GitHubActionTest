@@ -26,14 +26,14 @@ jobs:
       - name: snyk test - backend 
         run: |
           pwd
-          cd ../backend
+          cd backend
           pip freeze > requirements.txt
           snyk test --all-projects --command=python3 --severity-threshold=$SNYK_SEVERITY_THRESHOLD
           snyk code test --severity-threshold=$SNYK_SEVERITY_THRESHOLD
       - name: snyk test - C++ backend 
         run: |
           pwd
-          cd ../cpp_backend
+          cd cpp_backend
           snyk test --unmanaged --print-deps --severity-threshold=$SNYK_SEVERITY_THRESHOLD
           snyk code test --severity-threshold=$SNYK_SEVERITY_THRESHOLD
 
